@@ -6,7 +6,7 @@ using Dia2.ComInterfaces;
 
 namespace Dia2
 {
-    public sealed class Symbol
+    public sealed class Symbol : IEquatable<Symbol>
     {
         readonly Pdb pdb;
 
@@ -815,6 +815,26 @@ namespace Dia2
         {
             this.pdb    = pdb;
             this.symbol = symbol;
+        }
+
+        public bool Equals(Symbol? other)
+        {
+            return SymbolID == other?.SymbolID;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is Symbol other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return SymbolID.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return Name;
         }
     }
 }

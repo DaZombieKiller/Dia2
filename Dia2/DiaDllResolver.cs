@@ -9,9 +9,11 @@ namespace Dia2
     {
         public const string LibraryName = "msdia";
 
-        const string LibraryNameX86 = "msdia140";
+        const string DllVersion = "140";
 
-        const string LibraryNameX64 = "msdia140.amd64";
+        const string DllName = LibraryName + DllVersion;
+
+        const string DllNameX64 = DllName + ".amd64";
 
         [ModuleInitializer]
         public static void Initialize()
@@ -19,17 +21,21 @@ namespace Dia2
             NativeLibrary.SetDllImportResolver(typeof(DiaDllResolver).Assembly, Resolve);
         }
 
-        static IntPtr Resolve(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
+        static string GetDllName()
         {
-            if (libraryName != LibraryName)
-                return IntPtr.Zero;
-
             if (Environment.Is64BitProcess)
-                libraryName = LibraryNameX64;
+                return DllNameX64;
             else
-                libraryName = LibraryNameX86;
+                return DllName;
+        }
 
-            return NativeLibrary.Load(libraryName, assembly, searchPath);
+        static IntPtr Resolve(string name, Assembly assembly, DllImportSearchPath? searchPath)
+        {
+            return name switch
+            {
+                LibraryName => NativeLibrary.Load(GetDllName(), assembly, searchPath),
+                _           => IntPtr.Zero
+            };
         }
     }
 }

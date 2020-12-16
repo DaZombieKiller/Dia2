@@ -117,9 +117,6 @@ namespace Dia2
         /// <summary>The bit position of <see cref="LocationType"/>. Used when <see cref="LocationType"/> is <see cref="LocationType.IsBitField"/>.</summary>
         public uint BitPosition => symbol.bitPosition;
 
-        /// <summary>A built-in kind of the HLSL type.</summary>
-        public uint BuiltInKind => symbol.builtInKind;
-
         /// <summary>An indicator of a method's calling convention.</summary>
         public FunctionCallingConvention CallingConvention => symbol.callingConvention;
 
@@ -138,12 +135,6 @@ namespace Dia2
 
         /// <summary>The name of the compiler used to generate the Compiland.</summary>
         public string CompilerName => symbol.compilerName;
-
-        /// <summary>Specifies whether the user-defined data type has a constructor or destructor.</summary>
-        public bool Constructor => symbol.constructor;
-
-        /// <summary>Specifies whether the user-defined data type is constant.</summary>
-        public bool ConstType => symbol.constType;
 
         /// <summary>A symbol representing the parent/container of this symbol.</summary>
         public Symbol? Container => pdb.GetOrCreateSymbol(symbol.container);
@@ -224,12 +215,6 @@ namespace Dia2
         /// <summary>Specifies whether the function contains a call to <c>alloca</c> (which is used to allocate memory on the stack).</summary>
         public bool HasAlloca => symbol.hasAlloca;
 
-        /// <summary>Specifies whether the user-defined data type has any assignment operators defined.</summary>
-        public bool HasAssignmentOperator => symbol.hasAssignmentOperator;
-
-        /// <summary>Specifies whether the user-defined data type has any cast operators defined.</summary>
-        public bool HasCastOperator => symbol.hasCastOperator;
-
         /// <summary>Specifies if the Compiland contains debugging information.</summary>
         public bool HasDebugInfo => symbol.hasDebugInfo;
 
@@ -245,9 +230,6 @@ namespace Dia2
         /// <summary>Specifies whether the function contains a use of the <c>longjmp</c> command (paired with a <c>setjmp</c> command, these form the C-style method of exception handling).</summary>
         public bool HasLongJump => symbol.hasLongJump;
 
-        /// <summary>Specifies whether the user-defined data type has nested type definitions.</summary>
-        public bool HasNestedTypes => symbol.hasNestedTypes;
-
         /// <summary>Specifies whether the compiland or function has been compiled with buffer-overrun security checks (for example, the /GS (Buffer Security Check) compiler switch).</summary>
         public bool HasSecurityChecks => symbol.hasSecurityChecks;
 
@@ -256,15 +238,6 @@ namespace Dia2
 
         /// <summary>Specifies whether the function contains a use of the <c>setjmp</c> command (paired with the <c>longjmp</c> command, these form the C-style method of exception handling).</summary>
         public bool HasSetJump => symbol.hasSetJump;
-
-        /// <summary>Specifies whether a user-defined type (UDT) contains homogeneous floating-point aggregate (HFA) data of type float.</summary>
-        public bool HfaFloat => symbol.hfaFloat;
-
-        /// <summary>Specifies whether a user-defined type (UDT) contains homogeneous floating-point aggregate (HFA) data of type double.</summary>
-        public bool HfaDouble => symbol.hfaDouble;
-
-        /// <summary>Specifies whether the user-defined data type is an indirect virtual base class.</summary>
-        public bool IndirectVirtualBaseClass => symbol.indirectVirtualBaseClass;
 
         /// <summary>Indicates whether the function was marked as inline (using one of the inline, __inline, __forceinline attributes).</summary>
         public bool InlineSpecified => symbol.inlSpec;
@@ -281,13 +254,6 @@ namespace Dia2
         /// <summary>Specifies whether the data symbol is part of an aggregate or collection of symbols; the compiler will treat aggregated symbols as separate entities, but they are really part of a single larger symbol.</summary>
         /// <remarks><see cref="IsSplitted"/> is <see langword="true"/> for the symbol that is the parent of the aggregated symbols.</remarks>
         public bool IsAggregated => symbol.isAggregated;
-
-        /// <summary>Specifies whether the user-defined type (UDT) has been aligned to some specific memory boundary.</summary>
-        /// <remarks>
-        /// This property is generally set when the executable is compiled with nondefault data alignment.
-        /// For example, the Microsoft C++ compiler can change the data alignment with the command-line option, /Zp#, where # is a byte value.
-        /// </remarks>
-        public bool IsDataAligned => symbol.isDataAligned;
 
         /// <summary>Specifies whether this symbol represents High Level Shader Language (HLSL) data.</summary>
         public bool IsHlslData => symbol.isHLSLData;
@@ -405,9 +371,6 @@ namespace Dia2
         /// <summary>The name of the symbol.</summary>
         public string Name => symbol.name;
 
-        /// <summary>Specifies whether the user-defined data type is nested.</summary>
-        public bool Nested => symbol.nested;
-
         /// <summary>Specifies whether the function has been marked as being not inline (using the <c>noinline</c> attribute).</summary>
         public bool NoInline => symbol.noInline;
 
@@ -449,13 +412,6 @@ namespace Dia2
         /// <summary>Indicates whether the function contains debug information that is specific for optimized code.</summary>
         public bool OptimizedCodeDebugInfo => symbol.optimizedCodeDebugInfo;
 
-        /// <summary>Specifies whether the user-defined data type has overloaded operators.</summary>
-        public bool OverloadedOperator => symbol.overloadedOperator;
-
-        /// <summary>Specifies whether the user-defined data type (UDT) is packed.</summary>
-        /// <remarks>Packed means all the members of the UDT are positioned as close together as possible, with no intervening padding to align to memory boundaries.</remarks>
-        public bool Packed => symbol.packed;
-
         /// <summary>The platform type for which the compiland was compiled.</summary>
         public CpuType Platform => symbol.platform;
 
@@ -496,9 +452,6 @@ namespace Dia2
 
         /// <summary>The sampler slot.</summary>
         public uint SamplerSlot => symbol.samplerSlot;
-
-        /// <summary>Specifies whether the user-defined data type appears in a non-global lexical scope.</summary>
-        public bool Scoped => symbol.scoped;
 
         /// <summary>Specifies whether the class or method is sealed.</summary>
         /// <remarks>A sealed class cannot be used as a base class. A sealed method cannot be overidden.</remarks>
@@ -605,12 +558,6 @@ namespace Dia2
         /// <summary>The uav slot.</summary>
         public uint UavSlot => symbol.uavSlot;
 
-        /// <summary>The variety of a user-defined type (UDT).</summary>
-        public UdtKind UdtKind => symbol.udtKind;
-
-        /// <summary>Specifies whether the user-defined data type is unaligned.</summary>
-        public bool UnalignedType => symbol.unalignedType;
-
         /// <summary>The undecorated name for a C++ decorated, or linkage, name.</summary>
         public string UndecoratedName => symbol.undecoratedName;
 
@@ -654,9 +601,6 @@ namespace Dia2
         /// <remarks>Use when <see cref="LocationType"/> is <see cref="LocationType.IsStatic"/>.</remarks>
         public IntPtr VirtualAddress => new IntPtr((long)symbol.virtualAddress);
 
-        /// <summary>Specifies whether the user-defined data type is a virtual base class.</summary>
-        public bool VirtualBaseClass => symbol.virtualBaseClass;
-
         /// <summary>The index of the symbol in the virtual base displacement table.</summary>
         public uint VirtualBaseDisplacementIndex => symbol.virtualBaseDispIndex;
 
@@ -675,17 +619,6 @@ namespace Dia2
 
         /// <summary>The offset of the virtual base pointer.</summary>
         public int VirtualBasePointerOffset => symbol.virtualBasePointerOffset;
-
-        /// <summary>The symbol of the type of the virtual table for a user-defined type.</summary>
-        public Symbol? VirtualTableShape => pdb.GetOrCreateSymbol(symbol.virtualTableShape);
-
-        /// <summary>The virtual table shape symbol identifier of the symbol.</summary>
-        /// <remarks>The identifier is a unique value created by the DIA SDK to mark all symbols as unique.</remarks>
-        public uint VirtualTableShapeID => symbol.virtualTableShapeId;
-
-        /// <summary>Specifies whether the user-defined data type (UDT) is volatile.</summary>
-        /// <remarks>In C++, a UDT can be marked with the <see langword="volatile"/> keyword, indicating that its contents cannot be assumed to exist from one access to the next.</remarks>
-        public bool VolatileType => symbol.volatileType;
 
         /// <summary>Retrieves the children of the symbol. The local symbols that are returned include live range information, if the program is compiled with optimization on.</summary>
         /// <param name="tag">Specifies the symbol tags of the children to be retrieved, as defined in the <see cref="Dia2.SymbolTag"/> enum. Set to <see cref="SymbolTag.Null"/> for all children to be retrieved.</param>

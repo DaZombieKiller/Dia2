@@ -36,12 +36,12 @@ namespace Dia2
         }
 
         /// <summary>A symbol object that represents the global scope.</summary>
-        public Symbol GlobalScope
+        public ExeSymbol GlobalScope
         {
             get
             {
                 ThrowIfDisposed();
-                return GetOrCreateSymbol(session.globalScope);
+                return (ExeSymbol)GetOrCreateSymbol(session.globalScope);
             }
         }
 

@@ -88,11 +88,9 @@ namespace Dia2
             Stream.Dispose();
         }
 
-    #pragma warning disable CS8767
-        public void Clone(out IStream? ppstm)
-    #pragma warning restore CS8767
+        public void Clone(out IStream ppstm)
         {
-            ppstm = null;
+            ppstm = null!;
         }
 
         public void Revert()

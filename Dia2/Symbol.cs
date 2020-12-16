@@ -6,11 +6,11 @@ using Dia2.ComInterfaces;
 
 namespace Dia2
 {
-    public sealed class Symbol : IEquatable<Symbol>
+    public class Symbol : IEquatable<Symbol>
     {
-        readonly Pdb pdb;
+        private protected readonly Pdb pdb;
 
-        readonly IDiaSymbol symbol;
+        private protected readonly IDiaSymbol symbol;
 
         /// <summary>The access modifier of a class member.</summary>
         public MemberAccessLevel Access => symbol.access;
@@ -182,10 +182,6 @@ namespace Dia2
         /// <summary>Specifies whether the function contains a far return.</summary>
         public bool FarReturn => symbol.farReturn;
 
-        /// <summary>Specifies whether the frame pointer is present.</summary>
-        /// <remarks>Use when <see cref="SymbolTag"/> is <see cref="SymbolTag.Function"/>.</remarks>
-        public bool FramePointerPresent => symbol.framePointerPresent;
-
         /// <summary>The front end build number of the compiler.</summary>
         /// <remarks>
         /// A compiler is typically composed of two primary elements: the front end (the parser), which handles parsing
@@ -249,10 +245,6 @@ namespace Dia2
         /// <summary>Specifies whether the function contains a use of the <c>longjmp</c> command (paired with a <c>setjmp</c> command, these form the C-style method of exception handling).</summary>
         public bool HasLongJump => symbol.hasLongJump;
 
-        /// <summary>Indicates whether the module contains managed code.</summary>
-        /// <remarks>This property is available from the <see cref="SymbolTag.CompilandDetails"/> symbol type.</remarks>
-        public bool HasManagedCode => symbol.hasManagedCode;
-
         /// <summary>Specifies whether the user-defined data type has nested type definitions.</summary>
         public bool HasNestedTypes => symbol.hasNestedTypes;
 
@@ -290,14 +282,6 @@ namespace Dia2
         /// <remarks><see cref="IsSplitted"/> is <see langword="true"/> for the symbol that is the parent of the aggregated symbols.</remarks>
         public bool IsAggregated => symbol.isAggregated;
 
-        /// <summary>Indicates whether the symbol file contains C types.</summary>
-        /// <remarks>This property is available from the <see cref="SymbolTag.Exe"/> symbol type.</remarks>
-        public bool IsCTypes => symbol.isCTypes;
-
-        /// <summary>Indicates whether the module was converted from a Common Intermediate Language (CIL) module to a native module.</summary>
-        /// <remarks>This property is available from the <see cref="SymbolTag.CompilandDetails"/> symbol type.</remarks>
-        public bool IsConvertedCil => symbol.isCVTCIL;
-
         /// <summary>Specifies whether the user-defined type (UDT) has been aligned to some specific memory boundary.</summary>
         /// <remarks>
         /// This property is generally set when the executable is compiled with nondefault data alignment.
@@ -308,19 +292,11 @@ namespace Dia2
         /// <summary>Specifies whether this symbol represents High Level Shader Language (HLSL) data.</summary>
         public bool IsHlslData => symbol.isHLSLData;
 
-        /// <summary>Indicates whether the module was compiled with the /hotpatch (Create Hotpatchable Image) compiler switch.</summary>
-        /// <remarks>This property is available from the <see cref="SymbolTag.CompilandDetails"/> symbol type.</remarks>
-        public bool IsHotPatchable => symbol.isHotpatchable;
-
         /// <summary>Specifies whether the Compiland has been linked with the linker switch /LTCG (Link-time Code Generation), which aids in whole program optimization. This switch applies only to managed code.</summary>
         public bool IsLinkTimeCodeGeneration => symbol.isLTCG;
 
         /// <summary>Specifies whether the matrix is row major.</summary>
         public bool IsMatrixRowMajor => symbol.isMatrixRowMajor;
-
-        /// <summary>Indicates whether the module is a .netmodule (a Microsoft Intermediate Language (MSIL) module that contains only metadata and no native symbols).</summary>
-        /// <remarks>This property is available from the <see cref="SymbolTag.CompilandDetails"/> symbol type.</remarks>
-        public bool IsMsilNetModule => symbol.isMSILNetmodule;
 
         /// <summary>Specifies whether the <see langword="this"/> pointer points to a data member with multiple inheritance.</summary>
         public bool IsMultipleInheritance => symbol.isMultipleInheritance;
@@ -343,10 +319,6 @@ namespace Dia2
         /// <summary>Specifies whether the variable carries a return value.</summary>
         public bool IsReturnValue => symbol.isReturnValue;
 
-        /// <summary>Specifies whether the preprocesser directive for a safe buffer is used.</summary>
-        /// <remarks>Use when <see cref="SymbolTag"/> is <see cref="SymbolTag.Function"/>.</remarks>
-        public bool IsSafeBuffers => symbol.isSafeBuffers;
-
         /// <summary>Specifies whether the module is compiled with the /SDL option.</summary>
         public bool IsSdl => symbol.isSdl;
 
@@ -359,10 +331,6 @@ namespace Dia2
 
         /// <summary>Specifies whether the function or thunk layer has been marked as static.</summary>
         public bool IsStatic => symbol.isStatic;
-
-        /// <summary>Indicates whether private symbols were stripped from the symbol file.</summary>
-        /// <remarks>This property is available from the <see cref="SymbolTag.Exe"/> symbol type.</remarks>
-        public bool IsStripped => symbol.isStripped;
 
         /// <summary>Specifies whether the <see langword="this"/> pointer points to a data member with virtual inheritance.</summary>
         public bool IsVirtualInheritance => symbol.isVirtualInheritance;
@@ -411,10 +379,6 @@ namespace Dia2
 
         /// <summary>The beginning of the address range in which the local symbol is valid.</summary>
         public uint LiveRangeStartRelativeVirtualAddress => symbol.liveRangeStartRelativeVirtualAddress;
-
-        /// <summary>The ID of the register that holds a base pointer to local variables on the stack.</summary>
-        /// <remarks>Use when <see cref="SymbolTag"/> is <see cref="SymbolTag.Function"/>.</remarks>
-        public uint LocalBasePointerRegisterID => symbol.localBasePointerRegisterId;
 
         /// <summary>The location type of a data symbol.</summary>
         public LocationType LocationType => symbol.locationType;
@@ -471,21 +435,6 @@ namespace Dia2
         /// <summary>The object file name.</summary>
         public string ObjectFileName => symbol.objectFileName;
 
-        /// <summary>The type of the object pointer for a class method.</summary>
-        /// <remarks>This property applies only to symbols with a <see cref="SymbolTag"/> of <see cref="SymbolTag.FunctionType"/>.</remarks>
-        public Symbol? ObjectPointerType => pdb.GetOrCreateSymbol(symbol.objectPointerType);
-
-        /// <summary>The symbol's original equipment manufacturer (OEM) ID value.</summary>
-        /// <remarks>This property applies only to symbols with a <see cref="SymbolTag"/> of <see cref="SymbolTag.CustomType"/>.</remarks>
-        public uint OemID => symbol.oemId;
-
-        /// <summary>The original equipment manufacturer (OEM) symbol's ID value.</summary>
-        /// <remarks>
-        /// <para>The identifier is a unique value created by the DIA SDK to mark all symbols as unique.</para>
-        /// <para>This property applies only to symbols with a <see cref="SymbolTag"/> of <see cref="SymbolTag.CustomType"/>.</para>
-        /// </remarks>
-        public uint OemSymbolID => symbol.oemSymbolId;
-
         /// <summary>The offset of the symbol location.</summary>
         /// <remarks>
         /// <para>Use when <see cref="LocationType"/> is <see cref="LocationType.IsRegRel"/> or <see cref="LocationType.IsBitField"/>.</para>
@@ -506,10 +455,6 @@ namespace Dia2
         /// <summary>Specifies whether the user-defined data type (UDT) is packed.</summary>
         /// <remarks>Packed means all the members of the UDT are positioned as close together as possible, with no intervening padding to align to memory boundaries.</remarks>
         public bool Packed => symbol.packed;
-
-        /// <summary>The ID of the register that holds a base pointer to the parameters.</summary>
-        /// <remarks>Use when <see cref="SymbolTag"/> is <see cref="SymbolTag.Function"/>.</remarks>
-        public uint ParamBasePointerRegisterID => symbol.paramBasePointerRegisterId;
 
         /// <summary>The platform type for which the compiland was compiled.</summary>
         public CpuType Platform => symbol.platform;
@@ -582,10 +527,6 @@ namespace Dia2
         /// <remarks>The identifier is a unique value created by the DIA SDK to mark all symbols as unique.</remarks>
         public uint SubTypeID => symbol.subTypeId;
 
-        /// <summary>The name of the file from which the symbols were loaded.</summary>
-        /// <remarks>This property is valid only for symbols with a <see cref="SymbolTag"/> value of <see cref="SymbolTag.Exe"/> that also have global scope.</remarks>
-        public string SymbolsFileName => symbol.symbolsFileName;
-
         /// <summary>The unique symbol identifier.</summary>
         /// <remarks>The identifier is a unique value created by the DIA SDK to mark all symbols as unique.</remarks>
         public uint SymbolID => symbol.symIndexId;
@@ -596,22 +537,8 @@ namespace Dia2
         /// <summary>The offset section of a thunk target.</summary>
         public uint TargetOffset => symbol.targetOffset;
 
-        /// <summary>The relative virtual address (RVA) of a thunk target.</summary>
-        /// <remarks>
-        /// <para>This property is valid only if the symbol has a <see cref="SymbolTag"/> value of <see cref="SymbolTag.Thunk"/>.</para>
-        /// <para>A "thunk" is a piece of code that converts between a 32-bit memory address space(also known as flat address space) and a 16-bit address space(known as a segmented address space).</para>
-        /// </remarks>
-        public uint TargetRelativeVirtualAddress => symbol.targetRelativeVirtualAddress;
-
         /// <summary>The address section of a thunk target.</summary>
         public uint TargetSection => symbol.targetSection;
-
-        /// <summary>The virtual address (VA) of a thunk target.</summary>
-        /// <remarks>
-        /// <para>This property is valid only if the symbol has a <see cref="SymbolTag"/> value of <see cref="SymbolTag.Thunk"/>.</para>
-        /// <para>A "thunk" is a piece of code that converts between a 32-bit memory address space(also known as flat address space) and a 16-bit address space(known as a segmented address space).</para>
-        /// </remarks>
-        public IntPtr TargetVirtualAddress => new IntPtr((long)symbol.targetVirtualAddress);
 
         /// <summary>The texture slot.</summary>
         public uint TextureSlot => symbol.textureSlot;
@@ -619,13 +546,6 @@ namespace Dia2
         /// <summary>The logical <see langword="this"/> adjustor for the method.</summary>
         /// <remarks>In some multiple inheritance cases the method itself must calculate a true <see langword="this"/> value by adding an offset to <see langword="this"/>.</remarks>
         public int ThisAdjust => symbol.thisAdjust;
-
-        /// <summary>The thunk type of a function.</summary>
-        /// <remarks>
-        /// <para>This property is valid only if the symbol has a <see cref="SymbolTag"/> value of <see cref="SymbolTag.Thunk"/>.</para>
-        /// <para>A "thunk" is a piece of code that converts between a 32-bit memory address space(also known as flat address space) and a 16-bit address space(known as a segmented address space).</para>
-        /// </remarks>
-        public ThunkOrdinal ThunkOrdinal => symbol.thunkOrdinal;
 
         /// <summary>The timestamp of the underlying executable file.</summary>
         public uint TimeStamp => symbol.timeStamp;
@@ -773,7 +693,16 @@ namespace Dia2
         /// <param name="options">Specifies the comparison options to be applied to name matching.</param>
         public IEnumerable<Symbol> FindChildren(SymbolTag tag, string? name, NameSearchOptions options)
         {
-            return EnumerateSymbols(symbol.findChildrenEx(tag, name, options));
+            return EnumerateSymbols<Symbol>(symbol.findChildrenEx(tag, name, options));
+        }
+
+        /// <summary>Retrieves the children of the symbol. The local symbols that are returned include live range information, if the program is compiled with optimization on.</summary>
+        /// <param name="name">Specifies the name of the children to be retrieved. Set to <see langword="null"/> for all children to be retrieved.</param>
+        /// <param name="options">Specifies the comparison options to be applied to name matching.</param>
+        public IEnumerable<T> FindChildren<T>(string? name, NameSearchOptions options)
+            where T : Symbol
+        {
+            return EnumerateSymbols<T>(symbol.findChildrenEx(s_Tags[typeof(T)], name, options));
         }
 
         /// <summary>Retrieves the children of the symbol that are valid at a specified virtual address.</summary>
@@ -783,7 +712,17 @@ namespace Dia2
         /// <param name="address">Specifies the virtual address.</param>
         public IEnumerable<Symbol> FindChildrenByVA(SymbolTag tag, string? name, NameSearchOptions options, ulong address)
         {
-            return EnumerateSymbols(symbol.findChildrenExByVA(tag, name, options, address));
+            return EnumerateSymbols<Symbol>(symbol.findChildrenExByVA(tag, name, options, address));
+        }
+
+        /// <summary>Retrieves the children of the symbol that are valid at a specified virtual address.</summary>
+        /// <param name="name">Specifies the name of the children to be retrieved. Set to <see langword="null"/> for all children to be retrieved.</param>
+        /// <param name="options">Specifies the comparison options to be applied to name matching.</param>
+        /// <param name="address">Specifies the virtual address.</param>
+        public IEnumerable<T> FindChildrenByVA<T>(string? name, NameSearchOptions options, ulong address)
+            where T : Symbol
+        {
+            return EnumerateSymbols<T>(symbol.findChildrenExByVA(s_Tags[typeof(T)], name, options, address));
         }
 
         /// <summary>Retrieves the children of the symbol that are valid at a specified relative virtual address (RVA).</summary>
@@ -793,16 +732,27 @@ namespace Dia2
         /// <param name="address">Specifies the RVA.</param>
         public IEnumerable<Symbol> FindChildrenByRVA(SymbolTag tag, string? name, NameSearchOptions options, uint address)
         {
-            return EnumerateSymbols(symbol.findChildrenExByRVA(tag, name, options, address));
+            return EnumerateSymbols<Symbol>(symbol.findChildrenExByRVA(tag, name, options, address));
         }
 
-        IEnumerable<Symbol> EnumerateSymbols(IDiaEnumSymbols enumerator)
+        /// <summary>Retrieves the children of the symbol that are valid at a specified relative virtual address (RVA).</summary>
+        /// <param name="name">Specifies the name of the children to be retrieved. Set to <see langword="null"/> for all children to be retrieved.</param>
+        /// <param name="options">Specifies the comparison options to be applied to name matching.</param>
+        /// <param name="address">Specifies the RVA.</param>
+        public IEnumerable<T> FindChildrenByRVA<T>(string? name, NameSearchOptions options, uint address)
+            where T : Symbol
+        {
+            return EnumerateSymbols<T>(symbol.findChildrenExByRVA(s_Tags[typeof(T)], name, options, address));
+        }
+
+        IEnumerable<T> EnumerateSymbols<T>(IDiaEnumSymbols enumerator)
+            where T : Symbol
         {
             try
             {
                 foreach (IDiaSymbol symbol in enumerator)
                 {
-                    yield return pdb.GetOrCreateSymbol(symbol);
+                    yield return (T)pdb.GetOrCreateSymbol(symbol);
                 }
             }
             finally
@@ -836,5 +786,46 @@ namespace Dia2
         {
             return Name;
         }
+
+        static readonly Dictionary<Type, SymbolTag> s_Tags = new()
+        {
+            { typeof(Symbol), SymbolTag.Null },
+            { typeof(ExeSymbol), SymbolTag.Exe },
+            { typeof(CompilandSymbol), SymbolTag.Compiland },
+            { typeof(CompilandDetailsSymbol), SymbolTag.CompilandDetails },
+            { typeof(CompilandEnvironmentSymbol), SymbolTag.CompilandEnv },
+            { typeof(FunctionSymbol), SymbolTag.Function },
+            { typeof(BlockSymbol), SymbolTag.Block },
+            { typeof(DataSymbol), SymbolTag.Data },
+            { typeof(AnnotationSymbol), SymbolTag.Annotation },
+            { typeof(LabelSymbol), SymbolTag.Label },
+            { typeof(PublicSymbol), SymbolTag.PublicSymbol },
+            { typeof(UserDefinedTypeSymbol), SymbolTag.UDT },
+            { typeof(EnumSymbol), SymbolTag.Enum },
+            { typeof(FunctionTypeSymbol), SymbolTag.FunctionType },
+            { typeof(PointerTypeSymbol), SymbolTag.PointerType },
+            { typeof(ArrayTypeSymbol), SymbolTag.ArrayType },
+            { typeof(BaseTypeSymbol), SymbolTag.BaseType },
+            { typeof(TypedefSymbol), SymbolTag.Typedef },
+            { typeof(BaseClassSymbol), SymbolTag.BaseClass },
+            { typeof(FriendSymbol), SymbolTag.Friend },
+            { typeof(FunctionArgumentTypeSymbol), SymbolTag.FunctionArgType },
+            { typeof(FunctionDebugStartSymbol), SymbolTag.FuncDebugStart },
+            { typeof(FunctionDebugEndSymbol), SymbolTag.FuncDebugEnd },
+            { typeof(UsingNamespaceSymbol), SymbolTag.UsingNamespace },
+            { typeof(VTableShapeSymbol), SymbolTag.VTableShape },
+            { typeof(VTableSymbol), SymbolTag.VTable },
+            { typeof(CustomSymbol), SymbolTag.Custom },
+            { typeof(ThunkSymbol), SymbolTag.Thunk },
+            { typeof(CustomTypeSymbol), SymbolTag.CustomType },
+            { typeof(ManagedTypeSymbol), SymbolTag.ManagedType },
+            { typeof(DimensionSymbol), SymbolTag.Dimension },
+            { typeof(CallSiteSymbol), SymbolTag.CallSite },
+            { typeof(InlineSiteSymbol), SymbolTag.InlineSite },
+            { typeof(BaseInterfaceSymbol), SymbolTag.BaseInterface },
+            { typeof(VectorTypeSymbol), SymbolTag.VectorType },
+            { typeof(MatrixTypeSymbol), SymbolTag.MatrixType },
+            { typeof(HlslTypeSymbol), SymbolTag.HLSLType }
+        };
     }
 }

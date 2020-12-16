@@ -2,6 +2,7 @@
 
 namespace Dia2
 {
+    /// <summary>A symbol representing a user-defined type (<see langword="struct"/>, <see langword="class"/>, or <see langword="union"/>).</summary>
     public class UserDefinedTypeSymbol : Symbol
     {
         /// <summary>Specifies whether the user-defined data type has a constructor or destructor.</summary>

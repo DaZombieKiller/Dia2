@@ -2,6 +2,7 @@
 
 namespace Dia2
 {
+    /// <summary>A custom compiler symbol.</summary>
     public class CustomTypeSymbol : Symbol
     {
         /// <summary>The symbol's original equipment manufacturer (OEM) ID value.</summary>

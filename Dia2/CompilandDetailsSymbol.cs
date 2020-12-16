@@ -2,6 +2,7 @@
 
 namespace Dia2
 {
+    /// <summary>Contains extended attributes of a compiland. Retrieving these properties may require loading compiland symbols.</summary>
     public class CompilandDetailsSymbol : Symbol
     {
         /// <summary>Indicates whether the module contains managed code.</summary>

@@ -3,6 +3,7 @@ using Dia2.ComInterfaces;
 
 namespace Dia2
 {
+    /// <summary>A thunk used for sharing data between 16 and 32 bit code.</summary>
     public class ThunkSymbol : Symbol
     {
         /// <summary>The relative virtual address (RVA) of a thunk target.</summary>

@@ -2,6 +2,7 @@
 
 namespace Dia2
 {
+    /// <summary>Correspond to an object file linked into the image. For some kinds of Microsoft Intermediate Language (MSIL) images, there is one compiland per class.</summary>
     public class CompilandSymbol : Symbol
     {
         /// <summary>The name of the compiler used to generate the Compiland.</summary>

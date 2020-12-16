@@ -2,6 +2,7 @@
 
 namespace Dia2
 {
+    /// <summary>A symbol representing a function signature type.</summary>
     public class FunctionTypeSymbol : Symbol
     {
         /// <summary>The type of the object pointer for a class method.</summary>

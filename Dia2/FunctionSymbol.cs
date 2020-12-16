@@ -2,6 +2,7 @@
 
 namespace Dia2
 {
+    /// <summary>A symbol representing a function.</summary>
     public class FunctionSymbol : Symbol
     {
         /// <summary>Specifies whether the frame pointer is present.</summary>

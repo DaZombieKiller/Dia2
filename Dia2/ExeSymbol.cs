@@ -2,6 +2,7 @@
 
 namespace Dia2
 {
+    /// <summary>An .exe file. There is only one <see cref="Exe"/> symbol per symbol store. It serves as the global scope and does not have a lexical parent.</summary>
     public class ExeSymbol : Symbol
     {
         /// <summary>Indicates whether the symbol file contains C types.</summary>

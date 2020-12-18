@@ -54,14 +54,14 @@ namespace Dia2
 
         public void Stat(out STATSTG pstatstg, int grfStatFlag)
         {
-            var flags = (StorageStatFlags)grfStatFlag;
+            var flags = (StatFlags)grfStatFlag;
             pstatstg  = new STATSTG
             {
                 type   = (int)StorageType.Stream,
                 cbSize = Stream.Length
             };
 
-            if (!flags.HasFlag(StorageStatFlags.NoName) && Stream is FileStream fs)
+            if (!flags.HasFlag(StatFlags.NoName) && Stream is FileStream fs)
                 pstatstg.pwcsName = fs.Name;
 
             if (Stream.CanRead && Stream.CanWrite)
@@ -111,7 +111,7 @@ namespace Dia2
         }
 
         [Flags]
-        enum StorageStatFlags
+        enum StatFlags
         {
             None   = 0,
             NoName = 1 << 0,
@@ -128,11 +128,10 @@ namespace Dia2
 
         enum StorageType
         {
-            None,
-            Storage,
-            Stream,
-            LockBytes,
-            Property
+            Storage   = 1,
+            Stream    = 2,
+            LockBytes = 3,
+            Property  = 4
         }
 
         enum StorageError

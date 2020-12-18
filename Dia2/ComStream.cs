@@ -7,52 +7,44 @@ namespace Dia2
 {
     sealed class ComStream : IStream, IDisposable
     {
-        const int STATFLAG_NONAME = 0x1;
-
-        const int STGTY_STREAM = 0x2;
-
-        const int STGM_READ = 0x0;
-
-        const int STGM_WRITE = 0x1;
-
-        const int STGM_READWRITE = 0x2;
-
-        const int STG_E_INVALIDFUNCTION = unchecked((int)0x80030001);
-
         public Stream Stream { get; }
 
         public ComStream(Stream stream)
         {
+            if (stream is null)
+                throw new ArgumentNullException(nameof(stream));
+
             Stream = stream;
         }
 
         public void Read(byte[] pv, int cb, IntPtr pcbRead)
         {
-            for (int remaining = cb; remaining > 0;)
+            var read = Stream.Read(pv, 0, cb);
+
+            if (pcbRead != IntPtr.Zero)
             {
-                int read = Stream.Read(pv, cb - remaining, remaining);
-
-                if (read == 0)
-                {
-                    Marshal.WriteInt32(pcbRead, cb - remaining);
-                    return;
-                }
-
-                remaining -= read;
+                Marshal.WriteInt32(pcbRead, read);
             }
-
-            Marshal.WriteInt32(pcbRead, cb);
         }
 
         public void Write(byte[] pv, int cb, IntPtr pcbWritten)
         {
             Stream.Write(pv, 0, cb);
-            Marshal.WriteInt32(pcbWritten, cb);
+
+            if (pcbWritten != IntPtr.Zero)
+            {
+                Marshal.WriteInt32(pcbWritten, cb);
+            }
         }
 
         public void Seek(long dlibMove, int dwOrigin, IntPtr plibNewPosition)
         {
-            Marshal.WriteInt64(plibNewPosition, Stream.Seek(dlibMove, (SeekOrigin)dwOrigin));
+            long position = Stream.Seek(dlibMove, (SeekOrigin)dwOrigin);
+
+            if (plibNewPosition != IntPtr.Zero)
+            {
+                Marshal.WriteInt64(plibNewPosition, position);
+            }
         }
 
         public void SetSize(long libNewSize)
@@ -62,20 +54,24 @@ namespace Dia2
 
         public void Stat(out STATSTG pstatstg, int grfStatFlag)
         {
-            pstatstg = new STATSTG { type = STGTY_STREAM };
+            var flags = (StorageStatFlags)grfStatFlag;
+            pstatstg  = new STATSTG
+            {
+                type   = (int)StorageType.Stream,
+                cbSize = Stream.Length
+            };
 
-            if ((grfStatFlag & STATFLAG_NONAME) == 0)
-                pstatstg.pwcsName = Stream is FileStream fs ? fs.Name : string.Empty;
-            
-            if (Stream.CanSeek)
-                pstatstg.cbSize = Stream.Length;
+            if (!flags.HasFlag(StorageStatFlags.NoName) && Stream is FileStream fs)
+                pstatstg.pwcsName = fs.Name;
 
             if (Stream.CanRead && Stream.CanWrite)
-                pstatstg.grfMode = STGM_READWRITE;
+                pstatstg.grfMode |= (int)StorageMode.ReadWrite;
+            else if (Stream.CanRead)
+                pstatstg.grfMode |= (int)StorageMode.Read;
             else if (Stream.CanWrite)
-                pstatstg.grfMode = STGM_WRITE;
+                pstatstg.grfMode |= (int)StorageMode.Write;
             else
-                pstatstg.grfMode = STGM_READ;
+                throw new IOException("Current stream object was closed and disposed. Cannot access a closed stream.");
         }
 
         public void Commit(int grfCommitFlags)
@@ -88,28 +84,60 @@ namespace Dia2
             Stream.Dispose();
         }
 
-        public void Clone(out IStream ppstm)
+        void IStream.Clone(out IStream ppstm)
         {
             ppstm = null!;
+            throw new NotSupportedException();
         }
 
-        public void Revert()
+        void IStream.Revert()
         {
+            throw new NotSupportedException();
         }
 
-        public void CopyTo(IStream pstm, long cb, IntPtr pcbRead, IntPtr pcbWritten)
+        void IStream.CopyTo(IStream pstm, long cb, IntPtr pcbRead, IntPtr pcbWritten)
         {
-            throw new COMException(null, STG_E_INVALIDFUNCTION);
+            throw new NotSupportedException();
         }
 
-        public void LockRegion(long libOffset, long cb, int dwLockType)
+        void IStream.LockRegion(long libOffset, long cb, int dwLockType)
         {
-            throw new COMException(null, STG_E_INVALIDFUNCTION);
+            Marshal.ThrowExceptionForHR((int)StorageError.InvalidFunction, new IntPtr(-1));
         }
 
-        public void UnlockRegion(long libOffset, long cb, int dwLockType)
+        void IStream.UnlockRegion(long libOffset, long cb, int dwLockType)
         {
-            throw new COMException(null, STG_E_INVALIDFUNCTION);
+            Marshal.ThrowExceptionForHR((int)StorageError.InvalidFunction, new IntPtr(-1));
+        }
+
+        [Flags]
+        enum StorageStatFlags
+        {
+            None   = 0,
+            NoName = 1 << 0,
+            NoOpen = 1 << 1
+        }
+
+        [Flags]
+        enum StorageMode
+        {
+            Read      = 0,
+            Write     = 1 << 0,
+            ReadWrite = 1 << 1
+        }
+
+        enum StorageType
+        {
+            None,
+            Storage,
+            Stream,
+            LockBytes,
+            Property
+        }
+
+        enum StorageError
+        {
+            InvalidFunction = unchecked((int)0x80030001)
         }
     }
 }

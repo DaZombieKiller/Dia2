@@ -107,7 +107,7 @@ namespace Dia2.ComInterfaces
         void getTypes(uint cTypes, out uint pcTypes, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] IDiaSymbol[]? pTypes);
         void getTypeIds(uint cTypeIds, out uint pcTypeIds, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] uint[]? pdwTypeIds);
         IDiaSymbol? objectPointerType { get; }
-        UdtKind udtKind { [return: MarshalAs(UnmanagedType.U4)] get; }
+        UserDefinedTypeKind udtKind { [return: MarshalAs(UnmanagedType.U4)] get; }
         string getUndecoratedNameEx(UndecorateOptions undecorateOptions);
         bool noReturn { get; }
         bool customCallingConvention { get; }

@@ -2,7 +2,7 @@
 {
     /// <summary>Describes the variety of user-defined types (UDTs).</summary>
     /// <remarks>The values in this enumeration are returned by <see cref="Symbol.UdtKind"/>.</remarks>
-    public enum UdtKind
+    public enum UserDefinedTypeKind
     {
         /// <summary>UDT is a structure.</summary>
         Struct,

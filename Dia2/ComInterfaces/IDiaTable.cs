@@ -12,7 +12,6 @@ namespace Dia2.ComInterfaces
         IEnumerator GetEnumerator();
         string name { get; }
         int Count { get; }
-        [return: MarshalAs(UnmanagedType.IUnknown)]
-        object Item(uint index);
+        object this[uint index] { [return: MarshalAs(UnmanagedType.IUnknown)] get; }
     }
 }

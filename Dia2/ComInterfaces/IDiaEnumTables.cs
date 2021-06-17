@@ -11,7 +11,7 @@ namespace Dia2.ComInterfaces
     {
         IEnumerator GetEnumerator();
         int Count { get; }
-        IDiaTable? Item(object index);
+        IDiaTable? this[object index] { get; }
         void Next(uint celt, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] IDiaTable[] rgelt, out uint pceltFetched);
         void Skip(uint celt);
         void Reset();

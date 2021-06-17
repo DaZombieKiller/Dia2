@@ -50,7 +50,7 @@ namespace Dia2
         public bool IsScoped => symbol.scoped;
 
         /// <summary>The variety of a user-defined type (UDT).</summary>
-        public UdtKind Kind => symbol.udtKind;
+        public UserDefinedTypeKind Kind => symbol.udtKind;
 
         /// <summary>Specifies whether the user-defined data type is unaligned.</summary>
         public bool IsUnaligned => symbol.unalignedType;
